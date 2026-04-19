@@ -58,7 +58,7 @@ The `build_parser()` function defines the CLI (Command Line Interface).
 * **Type Casting:** It ensures `--threads` is an integer and `--timeout` is a float.
 * **Defaults:** It sets the "standard" hacking status codes (200, 204, 301, etc.) so the user doesn't have to type them every time.
 * **Pre-flight Check:** In the `if __name__ == "__main__":` block, the script validates that the URL starts with `http` or `https` before even starting the threads.
-
+ 
 ---
 
 ## 5. Visual Feedback: `class Color`
