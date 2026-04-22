@@ -3,7 +3,7 @@ To understand how **PyEnum** works, it’s best to look at it as an assembly lin
 Here is a deep dive into the logic of the script.
 
 ---
-
+ 
 ## 1. The Core Engine: `class PyEnum`
 This is the heart of the tool. When you initialize this class, it takes all your command-line arguments (URL, threads, wordlist) and sets up the environment.
 
