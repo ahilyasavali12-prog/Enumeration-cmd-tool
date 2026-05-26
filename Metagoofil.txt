@@ -1,0 +1,196 @@
+# 🔍 metagoofil — Metadata Extraction & OSINT Tool
+
+> **Kali Linux Information Gathering | Version 1.2.0**
+
+![Tool](https://img.shields.io/badge/Tool-metagoofil-blue?style=flat-square)
+![Category](https://img.shields.io/badge/Category-Information%20Gathering-red?style=flat-square)
+![Platform](https://img.shields.io/badge/Platform-Kali%20Linux-557C94?style=flat-square)
+![Language](https://img.shields.io/badge/Language-Python3-yellow?style=flat-square)
+![License](https://img.shields.io/badge/License-Open%20Source-green?style=flat-square)
+
+---
+
+## 📌 Overview
+
+**metagoofil** is an information-gathering tool designed for extracting metadata from public documents belonging to a target organisation. It automates Google searches to identify and download documents of specified file types from a target domain, enabling OSINT analysts and penetration testers to harvest metadata for reconnaissance.
+
+> ⚠️ **Disclaimer:** This tool is intended for authorised penetration testing, security research, and educational purposes only. Always obtain proper written permission before running reconnaissance against any target. Unauthorised use may violate computer crime laws.
+
+---
+
+## 🛠️ Supported File Types
+
+| Extension | Format |
+|-----------|--------|
+| `pdf` | Adobe PDF |
+| `doc` / `docx` | Microsoft Word |
+| `xls` / `xlsx` | Microsoft Excel |
+| `ppt` / `pptx` | Microsoft PowerPoint |
+| `odp` | OpenDocument Presentation |
+| `ods` | OpenDocument Spreadsheet |
+| `ALL` | All 17,576 three-letter extensions |
+
+---
+
+## ⚙️ Installation
+
+```bash
+# On Kali Linux
+sudo apt install metagoofil
+
+# Dependencies (auto-installed)
+# - python3
+# - python3-googlesearch
+# - python3-requests
+```
+
+**Installed size:** ~126 KB
+
+---
+
+## 🚀 Usage
+
+### Basic Syntax
+
+```bash
+metagoofil -d <DOMAIN> -t <FILE_TYPES> [OPTIONS]
+```
+
+### Full Options Reference
+
+```
+usage: metagoofil.py [-h] -d DOMAIN [-e DELAY] [-f [SAVE_FILE]]
+                     [-i URL_TIMEOUT] [-l SEARCH_MAX] [-n DOWNLOAD_FILE_LIMIT]
+                     [-o SAVE_DIRECTORY] [-r NUMBER_OF_THREADS] -t FILE_TYPES
+                     [-u [USER_AGENT]] [-w]
+```
+
+| Flag | Parameter | Description | Default |
+|------|-----------|-------------|---------|
+| `-d` | `DOMAIN` | Target domain to search (**required**) | — |
+| `-t` | `FILE_TYPES` | File types to search e.g. `pdf,doc,xls` (**required**) | — |
+| `-l` | `SEARCH_MAX` | Maximum number of search results | `100` |
+| `-n` | `DOWNLOAD_FILE_LIMIT` | Max files to download per type | `100` |
+| `-o` | `SAVE_DIRECTORY` | Directory to save downloaded files | `.` (cwd) |
+| `-f` | `SAVE_FILE` | Save HTML links to file (omit = don't save) | — |
+| `-e` | `DELAY` | Delay (seconds) between searches | `30.0` |
+| `-i` | `URL_TIMEOUT` | Timeout in seconds for unreachable pages | `15` |
+| `-r` | `NUMBER_OF_THREADS` | Number of downloader threads | `8` |
+| `-u` | `USER_AGENT` | Custom User-Agent string | Googlebot |
+| `-w` | — | Download files (instead of view-only) | — |
+
+---
+
+## 🧪 Usage Examples
+
+### Example 1 — Basic PDF Scan
+
+Scan a domain for PDF files, retrieve up to 100 results, download 25, and save output:
+
+```bash
+metagoofil -d kali.org -t pdf -l 100 -n 25 -o kalipdf -f kalipdf.html
+```
+
+**Expected output:**
+
+```
+******************************************************
+*     /\/\   ___| |_ __ _  __ _  ___   ___  / _(_) | *
+*    /    \ / _ \ __/ _` |/ _` |/ _ \ / _ \| |_| | | *
+*   / /\/\ \  __/ || (_| | (_| | (_) | (_) |  _| | | *
+*   \/    \/\___|\__\__,_|\__, |\___/ \___/|_| |_|_| *
+*                         |___/                      *
+* Metagoofil Ver 2.2                                 *
+* Christian Martorella                               *
+* Edge-Security.com                                  *
+******************************************************
+['pdf']
+[-] Starting online search...
+[-] Searching for pdf files, with a limit of 100
+        Searching 100 results...
+Results: 21 files found
+Starting to download 25 of them:
+```
+
+---
+
+### Example 2 — Multiple File Types
+
+Search for Word and Excel documents:
+
+```bash
+metagoofil -d example.com -t doc,docx,xls,xlsx -l 200 -n 50 -o output_docs -w
+```
+
+---
+
+### Example 3 — Stealth Mode (Custom User-Agent + Delay)
+
+Slow down requests and randomise User-Agent to reduce detection:
+
+```bash
+metagoofil -d target.com -t pdf,pptx -l 50 -n 10 -e 60 -u -o stealth_output
+```
+
+---
+
+### Example 4 — View Results Only (No Download)
+
+Enumerate URLs without downloading files:
+
+```bash
+metagoofil -d company.com -t pdf -l 100 -f links.txt
+```
+
+---
+
+## 🔎 Metadata of Interest
+
+When documents are downloaded, analysts can extract metadata using tools like **ExifTool** or **strings**:
+
+- **Usernames / Author names** — leaked internal user accounts
+- **Software versions** — OS, Office version, PDF generators
+- **Email addresses** — from document properties
+- **File paths** — internal directory structures
+- **Creation & modification dates** — activity timelines
+- **Printer/machine names** — network asset info
+
+```bash
+# Extract metadata with ExifTool (post-download)
+exiftool kalipdf/*.pdf
+```
+
+---
+
+## 🔗 Resources
+
+| Resource | Link |
+|----------|------|
+| Kali Linux Tool Page | https://www.kali.org/tools/metagoofil/ |
+| GitHub (opsdisk fork) | https://github.com/opsdisk/metagoofil |
+| Kali Source Repo | https://gitlab.com/kalilinux/packages/metagoofil |
+| Kali Package Tracker | https://pkg.kali.org/pkg/metagoofil |
+
+---
+
+## 📂 Related Tools
+
+- [`theHarvester`](https://www.kali.org/tools/theharvester/) — Email, subdomain, and name harvesting
+- [`ExifTool`](https://exiftool.org/) — Metadata extraction from downloaded files
+- [`FOCA`](https://github.com/ElevenPaths/FOCA) — Full metadata/document analysis GUI
+- [`Maltego`](https://www.maltego.com/) — Link analysis and OSINT visualisation
+
+---
+
+## ⚖️ Legal & Ethical Use
+
+This tool searches **publicly accessible** documents indexed by Google. However:
+
+- Always obtain **written authorisation** before conducting reconnaissance
+- Respect `robots.txt` and rate-limiting to avoid IP bans
+- Do not use against systems you do not own or have permission to test
+- Understand local laws — unauthorised access/scraping may be illegal
+
+---
+
+*Part of the Kali Linux Information Gathering toolkit. Maintained by the Kali Linux team.*
